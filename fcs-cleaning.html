@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCS Cleaning</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#0b0c0e;
+color:#fff;
+padding-bottom:120px;
+}
+
+header{
+padding:40px 20px;
+background:#111;
+text-align:center;
+border-bottom:2px solid #f0a500;
+}
+
+h1{
+margin:0;
+font-size:42px;
+color:#f0a500;
+}
+
+p{
+color:#ccc;
+}
+
+.container{
+padding:20px;
+max-width:1000px;
+margin:auto;
+}
+
+.card{
+background:#171b20;
+padding:20px;
+margin-bottom:20px;
+border:1px solid #2a2f36;
+border-radius:10px;
+}
+
+.card h2{
+margin-top:0;
+color:#f0a500;
+}
+
+input,select,textarea{
+width:100%;
+padding:14px;
+margin-top:10px;
+margin-bottom:16px;
+background:#0f1114;
+border:1px solid #333;
+color:#fff;
+font-size:16px;
+border-radius:8px;
+box-sizing:border-box;
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+background:#f0a500;
+color:#000;
+font-weight:bold;
+font-size:17px;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:12px;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.secondary{
+background:#1f2937;
+color:#fff;
+}
+
+#toTop{
+position:fixed;
+right:15px;
+bottom:90px;
+width:58px;
+height:58px;
+background:#f0a500;
+color:#000;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+font-weight:bold;
+border-radius:14px;
+text-decoration:none;
+z-index:9999;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+.bottom-bar{
+position:fixed;
+left:10px;
+right:10px;
+bottom:10px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+z-index:9998;
+}
+
+.bottom-bar a{
+background:#171b20;
+border:1px solid #333;
+color:#fff;
+text-decoration:none;
+padding:14px;
+text-align:center;
+border-radius:12px;
+font-weight:bold;
+}
+
+.bottom-bar a.primary{
+background:#f0a500;
+color:#000;
+}
+
+.print-only{
+display:none;
+}
+
+@media print{
+body *{
+visibility:hidden;
+}
+
+#printArea,
+#printArea *{
+visibility:visible;
+}
+
+#printArea{
+display:block;
+position:absolute;
+left:0;
+top:0;
+width:100%;
+background:#fff;
+color:#000;
+padding:30px;
+}
+
+.bottom-bar,
+#toTop{
+display:none;
+}
+}
+</style>
+</head>
+
+<body id="top">
+
+<header>
+<h1>FCS Cleaning</h1>
+<p>Professionele terreinreiniging Zuid-Holland</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Offerte / Inspectie</h2>
+
+<input id="naam" placeholder="Naam klant / bedrijf">
+
+<input id="telefoon" placeholder="Telefoonnummer">
+
+<input id="adres" placeholder="Adres / plaats">
+
+<select id="klus">
+<option value="">Type klus kiezen</option>
+<option>Dumpster pad</option>
+<option>Speelplaats</option>
+<option>Schoolplein</option>
+<option>Voetbalclub</option>
+<option>VvE</option>
+<option>Horeca terras</option>
+<option>Dakreiniging</option>
+</select>
+
+<input id="datum" type="date">
+
+<textarea id="opmerking" placeholder="Opmerking / bijzonderheden"></textarea>
+
+<button onclick="maakPDF()">📄 Maak offerte PDF</button>
+
+<button class="secondary" onclick="stuurMail()">📩 Verstuur e-mail</button>
+
+</div>
+
+<div class="card">
+<h2>Diensten</h2>
+<p>✔ Dumpster pads</p>
+<p>✔ Speelplaatsen</p>
+<p>✔ Schoolpleinen</p>
+<p>✔ Daken</p>
+<p>✔ Voetbalclubs</p>
+<p>✔ Bedrijfsterreinen</p>
+</div>
+
+</div>
+
+<div id="printArea" class="print-only">
+<h1>FCS Cleaning</h1>
+
+<h2>Offerte / Inspectie</h2>
+
+<p><strong>Naam:</strong> <span id="p_naam"></span></p>
+
+<p><strong>Telefoon:</strong> <span id="p_telefoon"></span></p>
+
+<p><strong>Adres:</strong> <span id="p_adres"></span></p>
+
+<p><strong>Type klus:</strong> <span id="p_klus"></span></p>
+
+<p><strong>Datum:</strong> <span id="p_datum"></span></p>
+
+<p><strong>Opmerking:</strong></p>
+
+<p id="p_opmerking"></p>
+</div>
+
+<a id="toTop" href="#top">↑</a>
+
+<div class="bottom-bar">
+<a href="#top">↑ Boven</a>
+<a class="primary" href="tel:+31648829434">📞 Bel</a>
+<a href="mailto:ericcardi@live.nl">📩 Mail</a>
+</div>
+
+<script>
+function val(id){
+return document.getElementById(id).value || "-";
+}
+
+function maakPDF(){
+
+document.getElementById("p_naam").innerText = val("naam");
+document.getElementById("p_telefoon").innerText = val("telefoon");
+document.getElementById("p_adres").innerText = val("adres");
+document.getElementById("p_klus").innerText = val("klus");
+document.getElementById("p_datum").innerText = val("datum");
+document.getElementById("p_opmerking").innerText = val("opmerking");
+
+setTimeout(function(){
+window.print();
+},200);
+}
+
+function stuurMail(){
+
+var body =
+"Nieuwe offerte aanvraag FCS Cleaning%0D%0A%0D%0A"+
+"Naam: "+val("naam")+"%0D%0A"+
+"Telefoon: "+val("telefoon")+"%0D%0A"+
+"Adres: "+val("adres")+"%0D%0A"+
+"Type klus: "+val("klus")+"%0D%0A"+
+"Datum: "+val("datum")+"%0D%0A%0D%0A"+
+"Opmerking:%0D%0A"+
+val("opmerking");
+
+window.location.href =
+"mailto:ericcardi@live.nl?subject=FCS Offerte&body="+body;
+}
+</script>
+
+</body>
+</html>
